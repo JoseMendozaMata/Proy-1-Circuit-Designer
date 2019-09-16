@@ -1,19 +1,15 @@
 package mainInterface;
 
 import gatesFunctionality.*;
-import gatesFunctionality.specificGates.AndGate;
 
 import java.io.File;
-import java.util.Random;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -28,7 +24,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -37,11 +32,9 @@ import javafx.stage.Stage;
 public class Interface extends Application{
 
 	Stage window;
-	Scene scene;
 	Group mainContainer;
 	ListView<ImageView> gatesList;
 	Pane canvas;
-	CircuitList circuit;
 	
 	public static void main(String[]args) {
 		launch(args);
@@ -53,74 +46,14 @@ public class Interface extends Application{
 		window = primaryStage;
 		mainContainer = new Group();
 		
-		// Boton para pruebas, mensajes en consola
-		
-		mainContainer.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				
-				//Esto evalua los elementos de la lista y las compuertas en si, con los rectángulos
-				// Para saber cuando conectar o no nodos, alguno está vacío
-				if(CircuitList.sourceRectangle == null  || CircuitList.destinyRectangle == null) {
-					;
-				}else {		// Cuando voy a conectar las compuertas
-					
-					// Actualizo el cursor, para que sepa que se deseleccionó el rectangulo 
-					// Aca reviso que la compuerta cumpla las reglas, revisar CircuitList para los metodos
-					if(circuit.canConnect()) {
-						System.out.println("Pueden conectarse estas compuertas");
-						// Hago la conección entre compuertas
-						circuit.connectGates();
-						// Hago la linea de coneccion
-						Line conection = new Line(CircuitList.sourceRectangle.getX(),
-								CircuitList.sourceRectangle.getY(),
-								CircuitList.destinyRectangle.getX(),
-								CircuitList.destinyRectangle.getY()
-								);
-						
-						Random rnd = new Random();
-						conection.setStroke(Color.color(rnd.nextDouble(),rnd.nextDouble(), rnd.nextDouble()));
-						CircuitList.sourceRectangle = null;
-						CircuitList.destinyRectangle = null;
-						
-						canvas.getChildren().add(conection);
-						
-					}else {
-						System.out.println("No pueden conectarse");
-					}
-					
-					CircuitList.sourceRectangle = null;
-					CircuitList.destinyRectangle = null;	
-				}
-			}
-		});
-		
 		canvas = new Pane();
 		canvas.setMinWidth(300);
-		canvas.setMinHeight(400);
+		canvas.setMinHeight(300);
 			
 		gatesList = new ListView<>();	// Lista con las compuertas, seteadas para un drag and drop
 		gatesList.setLayoutX(300);
 		
 		setGatesList();
-		
-		// ESte botón me revisa qué compuertas son entradas del circuito
-		Button button = new Button("Revisar Entradas");
-		canvas.getChildren().add(button);
-		button.setOnAction(e -> {
-			circuit.getInputGates();
-		});
-		
-		Button button1 = new Button("Realizar tabla de verdad");
-		canvas.getChildren().add(button);
-		button.setOnAction(e -> {
-			circuit.getInputGates();
-		});
-		
-	
-		// Creo la lista que será mi circuito
-		circuit = new CircuitList();
 		
 		canvas.setOnDragOver(new EventHandler<DragEvent>() {
 
@@ -130,6 +63,8 @@ public class Interface extends Application{
 				event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
 				
 			}
+			
+			
 		});
 		
 		// Lo que sucede cuando dropeo la compuerta lógica de la listview en el canvas(Pane)
@@ -139,67 +74,38 @@ public class Interface extends Application{
 			@Override
 			public void handle(DragEvent mouse) {
 				
-				// Aquí pongo lo que quier que pase cuando meto una nueva compuerta al canvas
-				if(mouse.getTransferMode() == TransferMode.COPY) {
-					
-					System.out.println("Dropped in: " + mouse.getSceneX() + ", " + mouse.getSceneY());
-
-					Dragboard recieve = mouse.getDragboard();	// Obtengo la dragboard
-
-					//System.out.println(recieve.getString());	// Veo el Id, para saber qué compuerta estoy arrastrando
-
-					String id = recieve.getString();
-
-					//Crear la compuerta que necesito poner en el Pane
-
-
-					GatesName gateName = getGateValue(id);	// Convierto el ID como un GatesName, para lamar a la factoría
-					//System.out.println(gateName);
-
-					// Aqui llamo a la factory para que me haga una compuerta de un tipo
-
-					GatesFactory factory = new GatesFactory();	// Creo una factory
-					Gates gate = factory.getGate(gateName);		//Le digo que me haga una compuerta específica
-
-					gate.setPosX(mouse.getSceneX());	// Seteo las posiciones de la compuerta
-					gate.setPosY(mouse.getSceneY());
-					gate.setGateImage();
-					gate.setEntry1();
-					gate.setEntry2();
-					gate.setOutput();
-
-					// OJO: Añado las compuertas a la lista, por lo cual puedo saber en esta instancia de la lista
-					// de qué rectangulos estoy hablando
-					circuit.addGate(gate);
-
-					// Coloco la imagen en el canvas, dados una paosicion x y y del mouse
-					//canvasField.drawImage(newImage.getImage(), mouse.getSceneX() - imgW * 0.5, mouse.getSceneY() - imgH * 0.5);
-					canvas.getChildren().addAll(gate.getGateImage(), gate.getEntry1(), gate.getEntry2(), gate.getOutput());
+				System.out.println("Dropped in: " + mouse.getSceneX() + ", " + mouse.getSceneY());
 				
-				// Lo que pasa cuando quiero mover una compuerta dentro del canvas
-				}else if(mouse.getTransferMode() == TransferMode.MOVE) {
-					
-					System.out.println("Moviendo compuerta dentro del canvas");
-					
-					System.out.println(mouse.getDragboard().getString());
-					
-					// Busco qué compuerta estoy moviendo por medio del id que le asigné
-					Gates movingGate = circuit.getById(mouse.getDragboard().getString());
-					
-					System.out.println("Moved to: " + mouse.getSceneX() + ", " + mouse.getSceneY());
-					
-					// Muevo la compuerta , para hacer algo con ella
-					movingGate.moveGate(mouse.getSceneX(), mouse.getSceneY());
-					
-					// TODO Buscar manera de mover la conexion cuando muevo la compuerta
-					
-				}
+				Dragboard recieve = mouse.getDragboard();	// Obtengo la dragboard
+				ImageView newImage = new ImageView();	// Creo el espacio para poner la nueva imagen
+				
+				System.out.println(recieve.getString());	// Veo el Id, para saber qué compuerta estoy arrastrando
+				
+				String id = recieve.getString();
+				
+				//Crear la compuerta que necesito poner en el Pane
+				
+				
+				GatesName gateName = getGateValue(id);	// Convierto el ID como un GatesName, para lamar a la factoría
+				System.out.println(gateName);
+				
+				
+				double imgHC = newImage.getImage().getHeight() * 0.5;	// Obtengo el alto, para arreglar el posicionammiento
+				double imgWC = newImage.getImage().getHeight() * 0.5;
+				
+				newImage.setX(mouse.getSceneX() - imgWC);
+				newImage.setY(mouse.getSceneY() - imgHC);
+				
+				// Coloco la imagen en el canvas, dados una paosicion x y y del mouse
+				//canvasField.drawImage(newImage.getImage(), mouse.getSceneX() - imgW * 0.5, mouse.getSceneY() - imgH * 0.5);
+				canvas.getChildren().add(newImage);
 			}
+			
 		});
 		
 		mainContainer.getChildren().addAll(canvas, gatesList);
 		
-		scene = new Scene(mainContainer, 400, 400);
+		Scene scene = new Scene(mainContainer, 400, 400);
 		window.setScene(scene);
 		window.show();
 	}
@@ -233,8 +139,7 @@ public class Interface extends Application{
 				// En la lista, obtengo el item seleccionado y empiezo el drag and drop
 				
 				ImageView image = gatesList.getSelectionModel().getSelectedItem();	// Obtengo el elemento seleccionado
-				// COPY hace referencia a que estoy depositando una nueva compuerta del gatesList al canvas
-				Dragboard db = image.startDragAndDrop(TransferMode.COPY);
+				Dragboard db = image.startDragAndDrop(TransferMode.MOVE);
 				
 				ClipboardContent content = new ClipboardContent();
 				content.putString(image.getId());
@@ -272,13 +177,5 @@ public class Interface extends Application{
 		return name;
 		
 	}
-	
-	
-	// Esta será a función que se ejecuta cuando se quiere correr el programa
-	public void run() {
-		
-			
-	}
-
 	
 }
