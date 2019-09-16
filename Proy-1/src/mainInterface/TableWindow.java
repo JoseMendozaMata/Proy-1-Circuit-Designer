@@ -102,7 +102,7 @@ public class TableWindow{
 		System.out.println("idCompuertas es: " + idCompuertas);
 		System.out.println("entryCompuertas es: " + entryCompuertas);
 		
-		// Seteo los valores de input de las compuertas respectiva
+		// Seteo los valores de input de las compuertas de entrada del circuito respectivas
 		for(Integer compuerta:idCompuertas) {	// Obtengo la compuerta de la que estoy hablando
 			for(TextField field:entryCompuertas) {	// Obtengo los valores a setear en esa compuerta
 			
@@ -139,15 +139,26 @@ public class TableWindow{
 				}
 				
 				// Seteo los valores de entrada de las compuertas de entrada
-				System.out.println("Pongo");
+			
 				gate.setValueInput1(valoresBoolean[0]);
 				gate.setValueInput2(valoresBoolean[1]);
 				
 			}
 		}
 		
-		//Aquí obtengo el valor de las operaciones de compuertas
+		//Aquí obtengo el valor de las operaciones de compuertas de entrada
 		System.out.println("Empiezo a buscar el valor de las operaciones de las compuertas");
+		
+		//Obtengo la referencia de todas las compuertas siguientes a las de entrada del circuito
+		
+		ArrayList<Gates> generation = new ArrayList<>();
+		
+		for(Integer compuerta:idCompuertas) {
+			
+			Gates nodo = circuitlist.getById(Integer.toString(compuerta)).getNextGate();	// Encuentro las entradas por el id
+			generation.add(nodo);
+			
+		}
 		
 		for(Integer compuerta:idCompuertas) {
 			
@@ -163,6 +174,35 @@ public class TableWindow{
 			System.out.println("El valor de la compuerta " + compuerta + " es: " + nodo.getOutputValue());
 		}
 		
+		//Acá Obtengo el output del circuito
+		getOutputCircuit(generation);
+	}
+	
+	// Obtengo el output del circuito
+	public String getOutputCircuit(ArrayList<Gates> generation) {
+		
+		ArrayList<Gates> newGen = new ArrayList<>();
+		
+		for(Gates gate:generation) {
+
+			gate.setValueInput1(gate.getPrevGate1().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
+			gate.setValueInput2(gate.getPrevGate2().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
+			
+			if(!(newGen.contains(gate.getNextGate()))) {	// Si la nueva generacion no tenía la compuerta,la agrego
+				newGen.add(gate.getNextGate());
+			}
+			
+			gate.setOutputValue(); 	// Seteo el valor output de las compuertas de la generación 
+			
+			if(gate.getNextGate() == null) {	// Quiere decir que se llegó a un punto de salida del circuito
+				
+				return "El valor final del circuito es: " + gate.getOutputValue();
+			}
+			
+		}
+		
+		getOutputCircuit(newGen);
+		return "";
 	}
 	
 }
