@@ -2,6 +2,8 @@ package gatesFunctionality.specificGates;
 
 import gatesFunctionality.*;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -11,6 +13,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 public class OrGate implements Gates{
 	
@@ -25,6 +28,7 @@ public class OrGate implements Gates{
 	private Rectangle Entry1;
 	private Rectangle Entry2;
 	private Rectangle Output;
+	private Text id;
 
 	private Gates next = null;	// Indica el next a nivel de lista
 	private Gates prev = null;
@@ -120,7 +124,7 @@ public class OrGate implements Gates{
 		// Configuro las posiciones de la imageView
 		imgView.setX(this.getPosX() - gateimg.getWidth()* 0.5);
 		imgView.setY(this.getPosY()- gateimg.getHeight()* 0.5);
-		
+
 		// Acá les pongo un identificador, para saber más rápido de qué compuerta estoy hablando
 		imgView.setId(Integer.toString(CircuitList.lenght));
 		
@@ -313,6 +317,9 @@ public class OrGate implements Gates{
 		this.getOutput().setX(getGateImage().getX() + getGateImage().getImage().getWidth());
 		this.getOutput().setY(getGateImage().getY() + this.getGateImage().getImage().getHeight() / 2);
 		
+		this.getId().setX(getGateImage().getX());
+		this.getId().setY(getGateImage().getY());
+		
 	}
 
 	@Override
@@ -348,6 +355,23 @@ public class OrGate implements Gates{
 	public void setPrevGate2(Gates gate) {
 		// TODO Auto-generated method stub
 		this.prevGate2 = gate;
+	}
+
+	@Override
+	public Text getId() {
+		// TODO Auto-generated method stub
+		return this.id;
+	}
+
+	@Override
+	public void setId() {
+		
+		Text text = new Text(this.getGateImage().getId());
+		text.setX(this.getPosX() - getGateImage().getImage().getWidth()* 0.5);
+		text.setY(this.getPosY()- getGateImage().getImage().getHeight()* 0.5);
+		
+		this.id = text;
+		
 	}
 	
 }
