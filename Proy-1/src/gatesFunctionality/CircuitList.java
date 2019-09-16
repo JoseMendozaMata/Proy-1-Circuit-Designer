@@ -198,18 +198,19 @@ public class CircuitList {
 		
 		Gates node = this.first;
 		
-		if(node.getGateImage().getId() == sourceId) {
+		System.out.println("Busco nodo con sourceId de: " + sourceId);
+		
+		if(node.getGateImage().getId().equals(sourceId)) {
 			System.out.println(node.getGateImage().getId());
 			System.out.println("Encontrado por id, es el primero");
 		}else {
-			while(!(node.getGateImage().getId() == sourceId)) {
+			while(!(node.getGateImage().getId().equals(sourceId))) {
 				System.out.println(node.getGateImage().getId());
 				node = node.getNext();
 			}
 			// Aca lo encuentro
 			System.out.println("Encontrado por id");
 		}
-		
 		return node;
 	}
 	

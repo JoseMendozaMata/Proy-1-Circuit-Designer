@@ -60,25 +60,22 @@ public class OrGate implements Gates{
 
 	@Override
 	public boolean getValueInput1() {
-		// TODO Auto-generated method stub
 		return this.ValueInput1;
 	}
 
 	@Override
 	public void setValueInput1(boolean valueInput1) {
-		// TODO Auto-generated method stub
+		this.ValueInput1 = valueInput1;
 	}
 
 	@Override
 	public boolean getValueInput2() {
-		// TODO Auto-generated method stub
 		return this.ValueInput2;
 	}
 
 	@Override
 	public void setValueInput2(boolean valueInput2) {
-		// TODO Auto-generated method stub
-		
+		this.ValueInput2 = valueInput2;
 	}
 
 	@Override
@@ -99,7 +96,7 @@ public class OrGate implements Gates{
 
 	@Override
 	public void setOutputValue() {
-		this.OutputValue = this.getValueInput1() && this.getValueInput2();
+		this.OutputValue = this.getValueInput1() || this.getValueInput2();
 	}
 
 	// Me sirve para saber si la compuerta es una entrada del circuito
@@ -324,42 +321,35 @@ public class OrGate implements Gates{
 
 	@Override
 	public Gates getNextGate() {
-		// TODO Auto-generated method stub
 		return this.nextGate;
 	}
 
 	@Override
 	public void setNextGate(Gates gate) {
-		// TODO Auto-generated method stub
 		this.nextGate = gate;
 	}
 
 	@Override
 	public Gates getPrevGate1() {
-		// TODO Auto-generated method stub
 		return this.prevGate1;
 	}
 
 	@Override
 	public void setPrevGate1(Gates gate) {
-		// TODO Auto-generated method stub
 		this.prevGate1 = gate;
 	}
 	
 	public Gates getPrevGate2() {
-		// TODO Auto-generated method stub
 		return this.prevGate2;
 	}
 
 	@Override
 	public void setPrevGate2(Gates gate) {
-		// TODO Auto-generated method stub
 		this.prevGate2 = gate;
 	}
 
 	@Override
 	public Text getId() {
-		// TODO Auto-generated method stub
 		return this.id;
 	}
 

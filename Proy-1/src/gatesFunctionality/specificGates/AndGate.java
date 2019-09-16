@@ -2,6 +2,8 @@ package gatesFunctionality.specificGates;
 
 import gatesFunctionality.*;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
@@ -27,11 +29,11 @@ public class AndGate implements Gates{
 	private Rectangle Entry2;
 	private Rectangle Output;
 	private Text id;
-	
+
 	private Gates next = null;	// Indica el next a nivel de lista
 	private Gates prev = null;
 	
-	private Gates nextGate = null;	// Indica el next del circuito
+	private Gates nextGate = null;	// Indica el next a partir del circuito
 	private Gates prevGate1 = null;
 	private Gates prevGate2 = null;
 	
@@ -58,25 +60,22 @@ public class AndGate implements Gates{
 
 	@Override
 	public boolean getValueInput1() {
-		// TODO Auto-generated method stub
 		return this.ValueInput1;
 	}
 
 	@Override
 	public void setValueInput1(boolean valueInput1) {
-		// TODO Auto-generated method stub
+		this.ValueInput1 = valueInput1;
 	}
 
 	@Override
 	public boolean getValueInput2() {
-		// TODO Auto-generated method stub
 		return this.ValueInput2;
 	}
 
 	@Override
 	public void setValueInput2(boolean valueInput2) {
-		// TODO Auto-generated method stub
-		
+		this.ValueInput2 = valueInput2;
 	}
 
 	@Override
@@ -117,12 +116,12 @@ public class AndGate implements Gates{
 	public void setGateImage() {
 		
 		ImageView imgView = new ImageView();		// Coloco la imageview para que se vea la compuerta
-		Image gateimg = new Image("Images/AND.png");	// Pongo la imagen and
+		Image gateimg = new Image("Images/OR.png");	// Pongo la imagen and
 		
 		// Configuro las posiciones de la imageView
 		imgView.setX(this.getPosX() - gateimg.getWidth()* 0.5);
 		imgView.setY(this.getPosY()- gateimg.getHeight()* 0.5);
-		
+
 		// Acá les pongo un identificador, para saber más rápido de qué compuerta estoy hablando
 		imgView.setId(Integer.toString(CircuitList.lenght));
 		
@@ -322,41 +321,35 @@ public class AndGate implements Gates{
 
 	@Override
 	public Gates getNextGate() {
-		// TODO Auto-generated method stub
 		return this.nextGate;
 	}
 
 	@Override
 	public void setNextGate(Gates gate) {
-		// TODO Auto-generated method stub
 		this.nextGate = gate;
 	}
 
 	@Override
 	public Gates getPrevGate1() {
-		// TODO Auto-generated method stub
 		return this.prevGate1;
 	}
 
 	@Override
 	public void setPrevGate1(Gates gate) {
-		// TODO Auto-generated method stub
 		this.prevGate1 = gate;
 	}
 	
 	public Gates getPrevGate2() {
-		// TODO Auto-generated method stub
 		return this.prevGate2;
 	}
 
 	@Override
 	public void setPrevGate2(Gates gate) {
-		// TODO Auto-generated method stub
 		this.prevGate2 = gate;
 	}
 
+	@Override
 	public Text getId() {
-		// TODO Auto-generated method stub
 		return this.id;
 	}
 

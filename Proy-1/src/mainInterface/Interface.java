@@ -44,7 +44,6 @@ public class Interface extends Application{
 	ListView<ImageView> gatesList;
 	Pane canvas;
 	CircuitList circuit;
-	TableWindow trueTable = new TableWindow();	// Objeto que se encarga de la interfaz de la tabla de verdad
 	
 	public static void main(String[]args) {
 		launch(args);
@@ -293,8 +292,11 @@ public class Interface extends Application{
 	
 	private void TrueTable() {
 		
+		TableWindow trueTable = new TableWindow();	// Objeto que se encarga de la interfaz de la tabla de verdad
+		
 		ArrayList<Gates> Entrys = circuit.getInputGates();
 		
+		trueTable.setCircuit(this.circuit);	// Paso la lista del circuito como parámetro
 		trueTable.setTable(Entrys);
 		trueTable.displayTrueTable();
 		
