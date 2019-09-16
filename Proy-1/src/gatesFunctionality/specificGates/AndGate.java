@@ -116,7 +116,7 @@ public class AndGate implements Gates{
 	public void setGateImage() {
 		
 		ImageView imgView = new ImageView();		// Coloco la imageview para que se vea la compuerta
-		Image gateimg = new Image("Images/OR.png");	// Pongo la imagen and
+		Image gateimg = new Image("Images/And.png");	// Pongo la imagen and
 		
 		// Configuro las posiciones de la imageView
 		imgView.setX(this.getPosX() - gateimg.getWidth()* 0.5);

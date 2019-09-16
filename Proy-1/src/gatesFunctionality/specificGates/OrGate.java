@@ -96,7 +96,7 @@ public class OrGate implements Gates{
 
 	@Override
 	public void setOutputValue() {
-		this.OutputValue = this.getValueInput1() || this.getValueInput2();
+		this.OutputValue = (getValueInput1() || this.getValueInput2());
 	}
 
 	// Me sirve para saber si la compuerta es una entrada del circuito

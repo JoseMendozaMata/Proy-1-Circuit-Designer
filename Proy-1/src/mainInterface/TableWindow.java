@@ -90,60 +90,51 @@ public class TableWindow{
 	
 	public void run() {
 		
-		// Reviso si la lista está vacía
-		System.out.println("El tamaño de la lista, en run, es de :" + circuitlist.lenght);
-		System.out.println("El primer elemento es: " + circuitlist.first);
-		
 		// Obtengo los id de las compuertas de entrada
 		ObservableList<Integer> idCompuertas = InputList.getItems();
 		// Obtengo los valores de entry de las compuertas
 		ObservableList<TextField> entryCompuertas = EntryList.getItems();
 		
-		System.out.println("idCompuertas es: " + idCompuertas);
-		System.out.println("entryCompuertas es: " + entryCompuertas);
-		
 		// Seteo los valores de input de las compuertas de entrada del circuito respectivas
-		for(Integer compuerta:idCompuertas) {	// Obtengo la compuerta de la que estoy hablando
-			for(TextField field:entryCompuertas) {	// Obtengo los valores a setear en esa compuerta
+		for(int i = 0; i < idCompuertas.size(); i++) {	// Obtengo la compuerta de la que estoy hablando
 			
-				// Busco la compuerta por su id
+			// Busco la compuerta por su id
+
+			String id = Integer.toString(idCompuertas.get(i));
+
+			Gates gate = this.circuitlist.getById(id);
+
+
+			// Obtengo los valores a setear en los entry de la compuerta
+
+			String textValues = entryCompuertas.get(i).getText();
+
+			// Ordeno los valores de input como una lista [Entry1Value, Entry2Value]
+			String[] valores = textValues.split(",");
+
+			// Convierto los 1 en true y 0 en false
+			Boolean[] valoresBoolean = new Boolean[2];
+
+			for(int j = 0; j < valores.length; j++) {
+
+				String val = valores[j];
 				
-				String id = Integer.toString(compuerta);
-				
-				Gates gate = this.circuitlist.getById(id);
-				
-				
-				// Obtengo los valores a setear en los entry de la compuerta
-				
-				String textValues = field.getText();
-				
-				// Ordeno los valores de input como una lista [Entry1Value, Entry2Value]
-				String[] valores = textValues.split(",");
-				
-				// Convierto los 1 en true y 0 en false
-				Boolean[] valoresBoolean = new Boolean[2];
-				
-				for(int i = 0; i < valores.length; i++) {
-					
-					String val = valores[i];
-					System.out.println(val + "y es: " + val.getClass());
-					
-					// Convierto de valores string a booleanos para asignarlos a la compuerta
-					if(val.equals("1")) {
-						valoresBoolean[i] = true;
-					}else if(val.equals("0")) {
-						valoresBoolean[i] = false;
-					}else {
-						System.out.println("No metió ni cero ni uno");
-					}
+				// Convierto de valores string a booleanos para asignarlos a la compuerta
+				if(val.equals("1")) {
+					valoresBoolean[j] = true;
+				}else if(val.equals("0")) {
+					valoresBoolean[j] = false;
+				}else {
+					System.out.println("No metió ni cero ni uno");
 				}
-				
-				// Seteo los valores de entrada de las compuertas de entrada
-			
-				gate.setValueInput1(valoresBoolean[0]);
-				gate.setValueInput2(valoresBoolean[1]);
-				
 			}
+
+			// Seteo los valores de entrada de las compuertas de entrada
+
+			gate.setValueInput1(valoresBoolean[0]);
+			gate.setValueInput2(valoresBoolean[1]);
+				
+			
 		}
 		
 		//Aquí obtengo el valor de las operaciones de compuertas de entrada
@@ -173,36 +164,49 @@ public class TableWindow{
 			//Imprimo (por el momento) el valor de salida de cada compuerta entrada
 			System.out.println("El valor de la compuerta " + compuerta + " es: " + nodo.getOutputValue());
 		}
-		
+		System.out.println("Llamo getOutputCircuit");
 		//Acá Obtengo el output del circuito
-		getOutputCircuit(generation);
+		boolean outputCircuit = getOutputCircuit(generation);
+		System.out.println("El resultado del circuito es: " + outputCircuit);
 	}
 	
 	// Obtengo el output del circuito
-	public String getOutputCircuit(ArrayList<Gates> generation) {
+	public boolean getOutputCircuit(ArrayList<Gates> generation) {
+		
+		System.out.println("Esta generacion tiene: " + generation.size() + " elementos");
+		
+		boolean result = false;
 		
 		ArrayList<Gates> newGen = new ArrayList<>();
 		
 		for(Gates gate:generation) {
-
+			
+			System.out.println("Compuerta" + gate.getId().getText());
+			System.out.println("El Entry1Value de esta compuerta es: " + gate.getPrevGate1().getOutputValue());
+			System.out.println("El Entry2Value de esta compuerta es: " + gate.getPrevGate2().getOutputValue());
+			
 			gate.setValueInput1(gate.getPrevGate1().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
 			gate.setValueInput2(gate.getPrevGate2().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
+			gate.setOutputValue(); 	// Seteo el valor output de las compuertas de la generación
+			
+			System.out.println("El OutputValue de esta compuerta es: " + gate.getOutputValue());
 			
 			if(!(newGen.contains(gate.getNextGate()))) {	// Si la nueva generacion no tenía la compuerta,la agrego
 				newGen.add(gate.getNextGate());
-			}
-			
-			gate.setOutputValue(); 	// Seteo el valor output de las compuertas de la generación 
+			} 
 			
 			if(gate.getNextGate() == null) {	// Quiere decir que se llegó a un punto de salida del circuito
-				
-				return "El valor final del circuito es: " + gate.getOutputValue();
+				System.out.println("En el nodo final");
+				gate.setOutputValue();
+				result = gate.getOutputValue();
+				return result;
 			}
 			
 		}
 		
-		getOutputCircuit(newGen);
-		return "";
+		System.out.println("Mando a llamar al metodo generacion");
+		
+		return getOutputCircuit(newGen);
 	}
 	
 }

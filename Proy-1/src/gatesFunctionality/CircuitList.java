@@ -128,16 +128,9 @@ public class CircuitList {
 		 
 		 sourceGate = this.getByRectangle(source);
 		 destinyGate = this.getByRectangle(destiny);
-	
-		 System.out.println("sourceGate : " +  sourceGate );
-		 System.out.println("destinyGate : " +  destinyGate );
 		 
 		 // Aquí debo conectar logicamente la compuerta, que está bien loco, porque este es cuando lo conecto
 		 // pero respecto a as compuertas,no a la lista
-		 
-		 System.out.println("Los prev Gate del destiny son:");
-		 System.out.println("prev 1 : " + destinyGate.getPrevGate1());
-		 System.out.println("prev 2 : " + destinyGate.getPrevGate2());
 		 
 		 // Esto es cuando puedo conectar un output con un input de unas compuertas
 		 // Estos if es cuando quiero conectar un output con un input
@@ -198,14 +191,12 @@ public class CircuitList {
 		
 		Gates node = this.first;
 		
-		System.out.println("Busco nodo con sourceId de: " + sourceId);
-		
 		if(node.getGateImage().getId().equals(sourceId)) {
 			System.out.println(node.getGateImage().getId());
-			System.out.println("Encontrado por id, es el primero");
+			
 		}else {
 			while(!(node.getGateImage().getId().equals(sourceId))) {
-				System.out.println(node.getGateImage().getId());
+			
 				node = node.getNext();
 			}
 			// Aca lo encuentro
