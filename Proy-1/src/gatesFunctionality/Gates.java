@@ -19,15 +19,9 @@ public interface Gates {
 	public boolean getValueInput2(); 
 	public void setValueInput2(boolean valueInput2); 
 	
-	public boolean isConected(); 
-	public void setConected(boolean isConected); 
-	
 	public boolean getOutputValue(); 
 	public void setOutputValue(); 
-	
-	public boolean isEntrance(); 
-	public void setEntrance(boolean isEntrance); 
-	
+
 	public ImageView getGateImage(); 
 	public void setGateImage();
 	

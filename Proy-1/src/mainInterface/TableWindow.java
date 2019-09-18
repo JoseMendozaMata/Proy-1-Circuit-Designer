@@ -166,47 +166,8 @@ public class TableWindow{
 		}
 		System.out.println("Llamo getOutputCircuit");
 		//Acá Obtengo el output del circuito
-		boolean outputCircuit = getOutputCircuit(generation);
+		boolean outputCircuit = this.circuitlist.getOutputCircuit(generation);
 		System.out.println("El resultado del circuito es: " + outputCircuit);
-	}
-	
-	// Obtengo el output del circuito
-	public boolean getOutputCircuit(ArrayList<Gates> generation) {
-		
-		System.out.println("Esta generacion tiene: " + generation.size() + " elementos");
-		
-		boolean result = false;
-		
-		ArrayList<Gates> newGen = new ArrayList<>();
-		
-		for(Gates gate:generation) {
-			
-			System.out.println("Compuerta" + gate.getId().getText());
-			System.out.println("El Entry1Value de esta compuerta es: " + gate.getPrevGate1().getOutputValue());
-			System.out.println("El Entry2Value de esta compuerta es: " + gate.getPrevGate2().getOutputValue());
-			
-			gate.setValueInput1(gate.getPrevGate1().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
-			gate.setValueInput2(gate.getPrevGate2().getOutputValue()); 	// Seteo los inputs con valores de compuertas anteriores
-			gate.setOutputValue(); 	// Seteo el valor output de las compuertas de la generación
-			
-			System.out.println("El OutputValue de esta compuerta es: " + gate.getOutputValue());
-			
-			if(!(newGen.contains(gate.getNextGate()))) {	// Si la nueva generacion no tenía la compuerta,la agrego
-				newGen.add(gate.getNextGate());
-			} 
-			
-			if(gate.getNextGate() == null) {	// Quiere decir que se llegó a un punto de salida del circuito
-				System.out.println("En el nodo final");
-				gate.setOutputValue();
-				result = gate.getOutputValue();
-				return result;
-			}
-			
-		}
-		
-		System.out.println("Mando a llamar al metodo generacion");
-		
-		return getOutputCircuit(newGen);
 	}
 	
 }

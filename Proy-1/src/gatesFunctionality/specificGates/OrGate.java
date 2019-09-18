@@ -79,37 +79,13 @@ public class OrGate implements Gates{
 	}
 
 	@Override
-	public boolean isConected() {
-		return this.isConected;
-	}
-
-	@Override
-	public void setConected(boolean isConected) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public boolean getOutputValue() {
 		return this.OutputValue;
 	}
 
 	@Override
 	public void setOutputValue() {
-		this.OutputValue = (getValueInput1() || this.getValueInput2());
-	}
-
-	// Me sirve para saber si la compuerta es una entrada del circuito
-	@Override
-	public boolean isEntrance() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setEntrance(boolean isEntrance) {
-		this.isEntrance = isEntrance;
-		
+		this.OutputValue = this.getValueInput1() || this.getValueInput2();
 	}
 
 	@Override
