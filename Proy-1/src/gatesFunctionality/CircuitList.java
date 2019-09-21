@@ -285,7 +285,6 @@ public class CircuitList {
 				System.out.println("El resultado del circuito es: " + result);
 				return result;
 			}else {	//Quiere decir que hay una siguiente compuerta por comparar
-				
 				ReferenceNode newRef = new ReferenceNode();
 				newRef.setReference(gate.getNext().getId().getText());
 				newGen.add(newRef);
