@@ -22,8 +22,6 @@ public class AndGate implements Gates{
 	private boolean ValueInput1;
 	private boolean ValueInput2;
 	private boolean OutputValue;
-	private boolean isConected;
-	private boolean isEntrance;
 	private ImageView gateImage;
 	private Rectangle Entry1;
 	private Rectangle Entry2;

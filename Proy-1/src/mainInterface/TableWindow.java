@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import gatesFunctionality.CircuitList;
 import gatesFunctionality.Gates;
+import gatesFunctionality.ReferenceList;
+import gatesFunctionality.ReferenceNode;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -142,14 +144,22 @@ public class TableWindow{
 		
 		//Obtengo la referencia de todas las compuertas siguientes a las de entrada del circuito
 		
-		ArrayList<Gates> generation = new ArrayList<>();
+		ReferenceList generation = new ReferenceList();
+		//TODO: 
+		// Esta referenceList tiene unos nodos que contienen las id de las compuertas, por lo que puedo
+		// Recuperar los nodos conectados a diferentes compuertas
 		
 		for(Integer compuerta:idCompuertas) {
 			
 			Gates nodo = circuitlist.getById(Integer.toString(compuerta)).getNextGate();	// Encuentro las entradas por el id
-			generation.add(nodo);
+			ReferenceNode ref = new ReferenceNode();
+			ref.setReference(nodo.getId().getText());	// Pongo el id de la compuerta
+			System.out.println("La referencia del nodo es: " + ref.getReference());
+			generation.add(ref);	// Añado el id de la compuerta a la lista de referencias
 			
 		}
+		
+		System.out.println("Termino de añadir elementos a la lista de referencia");
 		
 		for(Integer compuerta:idCompuertas) {
 			
@@ -167,7 +177,12 @@ public class TableWindow{
 		System.out.println("Llamo getOutputCircuit");
 		//Acá Obtengo el output del circuito
 		boolean outputCircuit = this.circuitlist.getOutputCircuit(generation);
-		System.out.println("El resultado del circuito es: " + outputCircuit);
+		
+		PopUpWindow output = new PopUpWindow();
+		//output.setWindow("Output del circuito", "El output de este circuito es: " + outputCircuit);
+		
+		//System.out.println("El resultado del circuito es: " + outputCircuit);
+		
 	}
 	
 }
