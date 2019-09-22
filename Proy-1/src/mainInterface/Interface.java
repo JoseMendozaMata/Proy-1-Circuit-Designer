@@ -132,7 +132,7 @@ public class Interface extends Application{
 		button2.setTranslateY(100);
 		canvas.getChildren().add(button2);
 		button2.setOnAction(e -> {
-			TrueTable();
+			TrueTableWindow();
 		});
 		
 		// Creo la lista que será mi circuito
@@ -290,7 +290,7 @@ public class Interface extends Application{
 		
 	}
 	
-	private void TrueTable() {
+	private void TrueTableWindow() {
 		
 		TableWindow trueTable = new TableWindow();	// Objeto que se encarga de la interfaz de la tabla de verdad
 		
@@ -298,7 +298,7 @@ public class Interface extends Application{
 		
 		trueTable.setCircuit(this.circuit);	// Paso la lista del circuito como parámetro
 		trueTable.setTable(Entrys);
-		trueTable.displayTrueTable();
+		trueTable.displayTable();
 		
 	}
 	

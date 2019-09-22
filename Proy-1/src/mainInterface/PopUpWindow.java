@@ -26,7 +26,7 @@ public class PopUpWindow extends Application{
 		
 		container = new VBox(15);
 		
-		scene = new Scene(container, 200, 150);
+		scene = new Scene(container, 300, 150);
 		stage.setScene(scene);
 		
 		

@@ -206,6 +206,7 @@ public class CircuitList {
 	}
 	
 	// Esto indica cuáles nodos son nodos de entrada, osea que hay que ponerles input
+	//TODO: Cambiar esta lista a una lista creada por mí
 	public ArrayList<Gates> getInputGates() {
 		
 		System.out.println("Reviso entradas");
@@ -245,12 +246,16 @@ public class CircuitList {
 	}
 	
 	// Obtengo el output del circuito
-	public boolean getOutputCircuit(ReferenceList generation) {
+	public ReferenceList getOutputCircuit(ReferenceList generation, ReferenceList outputs) {
 
 		System.out.println("Esta generacion tiene: " + generation.lenght + " elementos");
 
 		boolean result = false;
-
+		
+		if(generation.lenght == 0) {
+			return outputs;
+		}
+		
 		ReferenceList newGen = new ReferenceList();
 		System.out.println("Empiezo el for de getOutput");
 		for(int i = 0; i < generation.lenght; i++) {
@@ -282,19 +287,35 @@ public class CircuitList {
 				System.out.println("En el nodo final");
 				gate.setOutputValue();
 				result = gate.getOutputValue();
-				System.out.println("El resultado del circuito es: " + result);
-				return result;
+				System.out.println("Un resultado del circuito es: " + result + " dado por la compuerta: " + gate.getId().getText());
+				
+				ReferenceNode out = new ReferenceNode();
+				out.setReference(gate.getId().getText());	// Añado la id de la compuerta a los resultados
+				
+				if(!(outputs.IsRepeated(gate.getId().getText()))) {	// Valido si la salida es la misma
+					System.out.println("La compuerta de salida " + gate.getId().getText() + " no se repite");
+					outputs.add(out);
+				}else {
+					System.out.println("La compuerta de salida " + gate.getId().getText() + " se repite");
+				}
+				
+				
 			}else {	//Quiere decir que hay una siguiente compuerta por comparar
-				ReferenceNode newRef = new ReferenceNode();
-				newRef.setReference(gate.getNext().getId().getText());
-				newGen.add(newRef);
+				
+				if(!(newGen.IsRepeated(gate.getNextGate().getId().getText()))) {	// Revisa si el elem está repetido
+					System.out.println("No está repedido el " + gate.getNextGate().getId().getText());
+					ReferenceNode newRef = new ReferenceNode();
+					newRef.setReference(gate.getNextGate().getId().getText());
+					newGen.add(newRef);
+				}
+				
 			}
 			
 		}
 		
 		//System.out.println("Mando a llamar al metodo generacion");
 		
-		return getOutputCircuit(newGen);
+		return getOutputCircuit(newGen, outputs);
 		
 	}
 	
