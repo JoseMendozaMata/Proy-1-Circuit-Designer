@@ -216,13 +216,16 @@ public class TableWindow{
 	public void displayTrueTable() {	// Pondré los algoritmos y listas acá de la tabla de verdad
 		
 		VBox contenedor = new VBox(15);
+		contenedor.setMaxHeight(300);
+		
 		ScrollPane scrollPane = new ScrollPane();
 		HBox gatesBox = new HBox(5);
 		
-		scrollPane.setPrefSize(400, 300);
+		//scrollPane.setPrefSize(450, 300);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+		scrollPane.setPrefSize(500, 200);
 		
 		contenedor.getChildren().add(scrollPane);		
 		
@@ -253,7 +256,6 @@ public class TableWindow{
 			references.add(node);
 		}
 		
-		//TODO: Arreglar este desmadre
 		// Calculo los valores de salida de la tabla con los valores 1,1, esto para saber cuantas salidas tiene el circuito 
 		ReferenceList outputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
 		
@@ -333,6 +335,15 @@ public class TableWindow{
 		
 		
 		scrollPane.setContent(gatesBox);
+		
+		
+		Button exit = new Button("Salir");
+		exit.setOnAction(e -> {
+			window.close();
+		});
+		
+		contenedor.getChildren().add(exit);
+		
 		Scene scene = new Scene(contenedor);
 		window.setScene(scene);
 		window.show();
