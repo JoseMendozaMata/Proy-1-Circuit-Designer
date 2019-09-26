@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class OrGate implements Gates{
+public class NorGate implements Gates{
 	
 	private double posX;
 	private double posY;
@@ -83,14 +83,14 @@ public class OrGate implements Gates{
 
 	@Override
 	public void setOutputValue() {
-		this.OutputValue = this.getValueInput1() || this.getValueInput2();
+		this.OutputValue = !(this.getValueInput1() || this.getValueInput2());
 	}
 
 	@Override
 	public void setGateImage() {
 		
 		ImageView imgView = new ImageView();		// Coloco la imageview para que se vea la compuerta
-		Image gateimg = new Image("Images/OR.png");	// Pongo la imagen and
+		Image gateimg = new Image("Images/NOR.png");	// Pongo la imagen and
 		
 		// Configuro las posiciones de la imageView
 		imgView.setX(this.getPosX() - gateimg.getWidth()* 0.5);

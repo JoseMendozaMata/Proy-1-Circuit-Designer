@@ -139,6 +139,7 @@ public class TableWindow{
 					valoresBoolean[j] = false;
 				}else {
 					System.out.println("No metió ni cero ni uno");
+					return;
 				}
 			}
 
@@ -155,25 +156,39 @@ public class TableWindow{
 		//Obtengo la referencia de todas las compuertas siguientes a las de entrada del circuito
 		
 		ReferenceList generation = new ReferenceList();
-		//TODO: 
+		
+		//ReferenceList que contiene los valores de las compuertas que son entradas y salidas al mismo tiempo
+		ReferenceList entryOutputValues = new ReferenceList();
+		
 		// Esta referenceList tiene unos nodos que contienen las id de las compuertas, por lo que puedo
 		// Recuperar los nodos conectados a diferentes compuertas
 		
 		for(Integer compuerta:idCompuertas) {
 			
 			Gates nodo = circuitlist.getById(Integer.toString(compuerta)).getNextGate();	// Encuentro las entradas por el id
-			ReferenceNode ref = new ReferenceNode();
-			ref.setReference(nodo.getId().getText());	// Pongo el id de la compuerta
-			System.out.println("La referencia del nodo es: " + ref.getReference());
-			boolean repeat = generation.IsRepeated(ref.getReference());
-			System.out.println(repeat);
-			if(!(repeat)) {
-				System.out.println("El " + ref.getReference() + " no está repetido");
-				generation.add(ref);	// Añado el id de la compuerta a la lista de referencias, si no lo tenía
+			Gates nodoAct = circuitlist.getById(Integer.toString(compuerta));
+			if(nodoAct.getNextGate() == null) {	//La compuerta de entrada, también es salida
+				
+				System.out.println("La compuerta " + nodoAct.getId().getText() + " es entrada y salida");
+				ReferenceNode refEntryOut = new ReferenceNode();
+				refEntryOut.setReference(nodoAct.getId().getText());	//Creo nodo de referencia con la compuerta
+				entryOutputValues.add(refEntryOut);	//Añado el nodo
+				
 			}else {
-				System.out.println("Está repedido el " + ref.getReference());
-			}
 			
+				ReferenceNode ref = new ReferenceNode();
+				ref.setReference(nodo.getId().getText());	// Pongo el id de la compuerta
+				System.out.println("La referencia del nodo es: " + ref.getReference());
+				boolean repeat = generation.IsRepeated(ref.getReference());
+				System.out.println(repeat);
+				if(!(repeat)) {
+					System.out.println("El " + ref.getReference() + " no está repetido");
+					generation.add(ref);	// Añado el id de la compuerta a la lista de referencias, si no lo tenía
+				}else {
+					System.out.println("Está repedido el " + ref.getReference());
+				}
+			
+			}
 		}
 		
 		System.out.println("Termino de añadir elementos a la lista de referencia");
@@ -197,15 +212,28 @@ public class TableWindow{
 		//outputCircuit es una lista que tiene las compuertas que son salidas del circuito
 		outputCircuit = this.circuitlist.getOutputCircuit(generation, new ReferenceList());	
 		
-		
+		System.out.println("Output circuit tiene " + outputCircuit.lenght + " elementos");
+		System.out.println("entryOutputValues tiene " + entryOutputValues.lenght + " elementos");
 		String msg = "";
 		
+		//Salidas que son entry y output al mismo tiempo
+		for(int i = 0; i < entryOutputValues.lenght; i++) {
+			
+			System.out.println("Entra for de entryOutputValues");
+			
+			Gates res = this.circuitlist.getById(entryOutputValues.getIndex(i).getReference());
+			System.out.println("La salida de " + entryOutputValues.getIndex(i).getReference() + " es: " + res.getOutputValue());
+			msg += "La salida de " + entryOutputValues.getIndex(i).getReference() + " es: " + res.getOutputValue() + "\n";
+		}
+		
+		//Salidas "normales"
 		for(int i = 0; i < outputCircuit.lenght; i++) {
 			
 			Gates res = this.circuitlist.getById(outputCircuit.getIndex(i).getReference());
 			System.out.println("La salida de " + outputCircuit.getIndex(i).getReference() + " es: " + res.getOutputValue());
 			msg += "La salida de " + outputCircuit.getIndex(i).getReference() + " es: " + res.getOutputValue() + "\n";
 		}
+		
 		PopUpWindow outputInfo = new PopUpWindow();
 		outputInfo.setWindow("Output del circuito", msg);
 		
@@ -232,7 +260,9 @@ public class TableWindow{
 		ArrayList<Gates> initGates = this.circuitlist.getInputGates();	// Obtengo las compuertas iniciales del circuito
 		
 		ReferenceList references = new ReferenceList();	// Lista para pasar a algoritmo para obtener salida del circuito
-				
+		
+		System.out.println("Empiezo el for de las compuertas de inicio");
+		
 		for(Gates gate:initGates) {
 			
 			//Parte visual
@@ -252,87 +282,131 @@ public class TableWindow{
 			
 			//Parte logica, añadir id de las compuertas
 			ReferenceNode node = new ReferenceNode();
-			node.setReference(gate.getNextGate().getId().getText());	// Añado los nodos siguientes para saber 
-			references.add(node);
+			
+			if(gate.getNextGate() != null) {	//Si tiene una compuerta siguiente de salida
+				node.setReference(gate.getNextGate().getId().getText());	// Añado los nodos siguientes para saber 
+				references.add(node);
+			}
 		}
 		
 		// Calculo los valores de salida de la tabla con los valores 1,1, esto para saber cuantas salidas tiene el circuito 
 		ReferenceList outputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
-		
-		for(int j = 0; j < outputs.lenght; j++) {
+		System.out.println("La lista de referencias siguientes tiene " + references.lenght + " elementos");
+		if(!(references.lenght == 0)) {	//Si hay compuertas de salida que agregar
 			
-			// Obtengo la compuerta la cual es salida del circuito
-			Gates gate = this.circuitlist.getById(outputs.getIndex(j).getReference());	
+			for(int j = 0; j < outputs.lenght; j++) {
 
-			//Pongo la interfaz de la salida
-			ListView<String> outputList = new ListView<>();	//Nueva Lista de output de la compuerta salida del circuito
-			outputList.getItems().add("Compuerta de salida " + gate.getId().getText());	// Titulo
+				// Obtengo la compuerta la cual es salida del circuito
+				Gates gate = this.circuitlist.getById(outputs.getIndex(j).getReference());	
 
-			for(Gates initgate:initGates) {
-				//Setear valores 1,1 y calcular el valor de salida
-				initgate.setValueInput1(true);
-				initgate.setValueInput2(true);
-				initgate.setOutputValue();
+				//Pongo la interfaz de la salida
+				ListView<String> outputList = new ListView<>();	//Nueva Lista de output de la compuerta salida del circuito
+				outputList.getItems().add("Compuerta de salida " + gate.getId().getText());	// Titulo
+
+				for(Gates initgate:initGates) {
+					//Setear valores 1,1 y calcular el valor de salida
+					initgate.setValueInput1(true);
+					initgate.setValueInput2(true);
+					initgate.setOutputValue();
+				}
+
+				// Calculo los valores de salida de la tabla con los valores 1,1
+				ReferenceList nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
+
+				// Obtengo la compuerta la cual es salida del circuito
+				gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
+
+				outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 1,1
+
+				for(Gates initgate:initGates) {
+					//Setear valores 1,0 y calcular el valor de salida
+					initgate.setValueInput1(true);
+					initgate.setValueInput2(false);
+					initgate.setOutputValue();
+				}
+
+				// Calculo los valores de salida de la tabla con los valores 1,0 
+				nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
+
+				// Obtengo la compuerta la cual es salida del circuito
+				gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
+
+				//Añado el resultad a la lista
+				outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 1,0
+
+				for(Gates initgate:initGates) {
+					//Setear valores 0,1 y calcular el valor de salida
+					initgate.setValueInput1(false);
+					initgate.setValueInput2(true);
+					initgate.setOutputValue();
+				}
+
+				// Calculo los valores de salida de la tabla con los valores 0,1 
+				nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
+
+				// Obtengo la compuerta la cual es salida del circuito
+				gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
+
+				outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 0,1
+
+				for(Gates initgate:initGates) {
+					//Setear valores 0,0 y calcular el valor de salida
+					initgate.setValueInput1(false);
+					initgate.setValueInput2(false);
+					initgate.setOutputValue();
+				}
+
+				// Calculo los valores de salida de la tabla con los valores 0,0 
+				nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
+
+				// Obtengo la compuerta la cual es salida del circuito
+				gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
+
+				outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 0,0
+
+				gatesBox.getChildren().add(outputList);
+
 			}
-
-			// Calculo los valores de salida de la tabla con los valores 1,1
-			ReferenceList nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
-
-			// Obtengo la compuerta la cual es salida del circuito
-			gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
-
-			outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 1,1
-			
-			for(Gates initgate:initGates) {
-				//Setear valores 1,0 y calcular el valor de salida
-				initgate.setValueInput1(true);
-				initgate.setValueInput2(false);
-				initgate.setOutputValue();
+		}else {	//Aquí es donde hago la lógica de las compuertas de entrada
+			System.out.println("No se necesitan agregar compuertas que tienen otras referencias");
+			for(Gates gate:initGates) {
+				
+				ListView<String> compSalida = new ListView<>();	//La parte de salida de la compuerta
+				
+				String gateId = gate.getId().getText();
+				compSalida.getItems().add("Salida de " + gateId);	//Titulo
+				
+				//Resultado con 1,1
+				gate.setValueInput1(true);
+				gate.setValueInput2(true);
+				gate.setOutputValue();
+				
+				compSalida.getItems().add(String.valueOf(gate.getOutputValue()));	//Pongo el resultado
+				
+				//Resultado con 1,0
+				gate.setValueInput1(true);
+				gate.setValueInput2(false);
+				gate.setOutputValue();
+				
+				compSalida.getItems().add(String.valueOf(gate.getOutputValue()));	//Pongo el resultado
+				
+				//Resultado con 0,1
+				gate.setValueInput1(false);
+				gate.setValueInput2(true);
+				gate.setOutputValue();
+				
+				compSalida.getItems().add(String.valueOf(gate.getOutputValue()));	//Pongo el resultado
+				
+				//Resultado con 0,0
+				gate.setValueInput1(false);
+				gate.setValueInput2(false);
+				gate.setOutputValue();
+				
+				compSalida.getItems().add(String.valueOf(gate.getOutputValue()));	//Pongo el resultado
+				
+				gatesBox.getChildren().add(compSalida);
 			}
-			
-			// Calculo los valores de salida de la tabla con los valores 1,0 
-			nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
-			
-			// Obtengo la compuerta la cual es salida del circuito
-			gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
-			
-			//Añado el resultad a la lista
-			outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 1,0
-			
-			for(Gates initgate:initGates) {
-				//Setear valores 0,1 y calcular el valor de salida
-				initgate.setValueInput1(false);
-				initgate.setValueInput2(true);
-				initgate.setOutputValue();
-			}
-			
-			// Calculo los valores de salida de la tabla con los valores 0,1 
-			nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
-			
-			// Obtengo la compuerta la cual es salida del circuito
-			gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
-			
-			outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 0,1
-			
-			for(Gates initgate:initGates) {
-				//Setear valores 0,0 y calcular el valor de salida
-				initgate.setValueInput1(false);
-				initgate.setValueInput2(false);
-				initgate.setOutputValue();
-			}
-			
-			// Calculo los valores de salida de la tabla con los valores 0,0 
-			nOutputs = this.circuitlist.getOutputCircuit(references, new ReferenceList());
-			
-			// Obtengo la compuerta la cual es salida del circuito
-			gate = this.circuitlist.getById(nOutputs.getIndex(j).getReference());
-			
-			outputList.getItems().add(String.valueOf(gate.getOutputValue()));	// Resultado 0,0
-			
-			gatesBox.getChildren().add(outputList);
-			
 		}
-		
 		
 		scrollPane.setContent(gatesBox);
 		

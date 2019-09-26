@@ -6,4 +6,6 @@ public enum GatesName {
 	NOT,
 	NAND,
 	NOR,
+	XOR,
+	XNOR,
 }

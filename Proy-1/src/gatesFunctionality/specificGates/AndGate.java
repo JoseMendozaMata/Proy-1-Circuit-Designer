@@ -145,7 +145,7 @@ public class AndGate implements Gates{
 
 		// Seteo los rectangulos de las entradas
 		this.Entry1 = new Rectangle(this.gateImage.getX() ,	// X 
-				this.gateImage.getY() + (this.gateImage.getImage().getHeight() / 3)	//Y
+				this.gateImage.getY() + (this.gateImage.getImage().getHeight() / 4)	//Y
 				, 10 // width
 				, 10	// height
 				);
@@ -336,6 +336,11 @@ public class AndGate implements Gates{
 		
 		this.id = text;
 		
+	}
+
+	@Override
+	public String getType() {
+		return null;
 	}
 	
 }

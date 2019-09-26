@@ -191,8 +191,14 @@ public class Interface extends Application{
 
 					// Coloco la imagen en el canvas, dados una paosicion x y y del mouse
 					//canvasField.drawImage(newImage.getImage(), mouse.getSceneX() - imgW * 0.5, mouse.getSceneY() - imgH * 0.5);
-					canvas.getChildren().addAll(gate.getGateImage(), gate.getEntry1(), gate.getEntry2(), gate.getOutput(), gate.getId());
-				
+					
+					//El unico y detergente not
+					if(gateName == GatesName.NOT) {
+						canvas.getChildren().addAll(gate.getGateImage(), gate.getEntry1(), gate.getOutput(), gate.getId());
+					}else {
+						canvas.getChildren().addAll(gate.getGateImage(), gate.getEntry1(), gate.getEntry2(), gate.getOutput(), gate.getId());
+					}
+					
 				// Lo que pasa cuando quiero mover una compuerta dentro del canvas
 				}else if(mouse.getTransferMode() == TransferMode.MOVE) {
 					
@@ -282,8 +288,21 @@ public class Interface extends Application{
 		case "NAND.png":
 			name = GatesName.NAND;
 			break;
+		case "NOR.png":
+			name = GatesName.NOR;
+			break;
+		case "XOR.png":
+			name = GatesName.XOR;
+			break;
+		case "XNOR.png":
+			name = GatesName.XNOR;
+			break;
+		case "NOT.png":
+			name = GatesName.NOT;
+			break;
 		default:
 			System.out.println("No existe el tipo de copuerta que quiere usar");
+			break;
 		}
 		
 		return name;

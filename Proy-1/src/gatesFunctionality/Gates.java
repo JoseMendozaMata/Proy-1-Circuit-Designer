@@ -53,5 +53,6 @@ public interface Gates {
 	public void setId();
 	
 	public void moveGate(double newX, double newY);
+	public String getType();
 	
 }

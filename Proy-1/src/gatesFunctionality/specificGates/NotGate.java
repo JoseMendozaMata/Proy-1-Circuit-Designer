@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-public class OrGate implements Gates{
+public class NotGate implements Gates{
 	
 	private double posX;
 	private double posY;
@@ -27,6 +27,7 @@ public class OrGate implements Gates{
 	private Rectangle Entry2;
 	private Rectangle Output;
 	private Text id;
+	private String type = "NOT";
 
 	private Gates next = null;	// Indica el next a nivel de lista
 	private Gates prev = null;
@@ -82,16 +83,16 @@ public class OrGate implements Gates{
 	}
 
 	@Override
-	public void setOutputValue() {
-		this.OutputValue = this.getValueInput1() || this.getValueInput2();
+	public void setOutputValue() {	//Niega su entrada, es lo que hace el not
+		this.OutputValue = !(this.getValueInput1());
 	}
 
 	@Override
 	public void setGateImage() {
 		
 		ImageView imgView = new ImageView();		// Coloco la imageview para que se vea la compuerta
-		Image gateimg = new Image("Images/OR.png");	// Pongo la imagen and
-		
+		Image gateimg = new Image("Images/NOT.png");	// Pongo la imagen and
+
 		// Configuro las posiciones de la imageView
 		imgView.setX(this.getPosX() - gateimg.getWidth()* 0.5);
 		imgView.setY(this.getPosY()- gateimg.getHeight()* 0.5);
@@ -145,7 +146,7 @@ public class OrGate implements Gates{
 
 		// Seteo los rectangulos de las entradas
 		this.Entry1 = new Rectangle(this.gateImage.getX() ,	// X 
-				this.gateImage.getY() + (this.gateImage.getImage().getHeight() / 4)	//Y
+				this.gateImage.getY() + (this.gateImage.getImage().getHeight() / 2)	//Y
 				, 10 // width
 				, 10	// height
 				);
@@ -171,44 +172,15 @@ public class OrGate implements Gates{
 	}
 
 	@Override
-	public Rectangle getEntry2() {
+	public Rectangle getEntry2() {	//Esto no se usa
 		
-		return this.Entry2;
+		return new Rectangle();
 	}
 
 	// Método que se encarga de mover el rectángulo cuando éste se mueve en el Pane
 	@Override
-	public void setEntry2() {
-
-		// Seteo los rectangulos
-		this.Entry2 = new Rectangle(this.gateImage.getX()
-				, this.gateImage.getY() + this.gateImage.getImage().getHeight() / 1.5
-				, 10
-				, 10
-				);
-		
-		this.getEntry2().setFill(Color.AQUA);
-		
-		// Aquí pongo la  funcionalidad para detectar la conexión de dos compuertas
-		this.getEntry2().setOnMouseClicked(new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				
-				// Esto solo pone el source y el destiny a la lista
-				// Si no hay rectangulo source, lo pongo 
-				if (CircuitList.sourceRectangle == null) {
-					CircuitList.sourceRectangle = (Rectangle) event.getSource();
-			
-					// Si ya había un rectangulo, quiere decir que el que estaba, lo estoy conectando con el que clickeo
-				}else{
-					CircuitList.destinyRectangle = (Rectangle) event.getSource();
-					System.out.println("Pongo destiny en lista");
-				}
-			}
-
-		});
-		
+	public void setEntry2() {	//No se necesita poner este rectángulo
+		;
 	}
 
 	@Override
@@ -282,8 +254,10 @@ public class OrGate implements Gates{
 		this.getEntry1().setX(getGateImage().getX());
 		this.getEntry1().setY(getGateImage().getY() + this.getGateImage().getImage().getHeight() / 3);
 		
+		/* No necesita moverse, no existe
 		this.getEntry2().setX(getGateImage().getX());
 		this.getEntry2().setY(getGateImage().getY() + this.getGateImage().getImage().getHeight() / 1.5);
+		*/
 		
 		this.getOutput().setX(getGateImage().getX() + getGateImage().getImage().getWidth());
 		this.getOutput().setY(getGateImage().getY() + this.getGateImage().getImage().getHeight() / 2);
@@ -313,12 +287,12 @@ public class OrGate implements Gates{
 		this.prevGate1 = gate;
 	}
 	
-	public Gates getPrevGate2() {
+	public Gates getPrevGate2() {	//No tiene prevGate2, esto no se usará
 		return this.prevGate2;
 	}
 
 	@Override
-	public void setPrevGate2(Gates gate) {
+	public void setPrevGate2(Gates gate) {	//No tiene prevGate2, esto no se usará
 		this.prevGate2 = gate;
 	}
 
@@ -337,11 +311,9 @@ public class OrGate implements Gates{
 		this.id = text;
 		
 	}
-
-	@Override
+	
 	public String getType() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.type;
 	}
 	
 }
